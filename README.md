@@ -1,5 +1,9 @@
 # RectLayout
 
+[![Hex.pm](https://img.shields.io/hexpm/v/rect_layout.svg)](https://hexdocs.pm/rect_layout)
+[![github deploy](https://github.com/ivank/rect_layout/actions/workflows/deploy.yml/badge.svg)](https://github.com/ivank/rect_layout)
+[![codecov](https://codecov.io/gh/ivank/rect_layout/graph/badge.svg?token=T7UZUFT8VR)](https://codecov.io/gh/ivank/rect_layout)
+
 Create and manipulate rectangular objects and groups of objects.
 This is meant to allow generating dynamic svgs easier as it allows you to calculate positions of various svg elements with relation to each other.
 
