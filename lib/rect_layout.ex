@@ -16,7 +16,7 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> group([rect(10,20),rect(5,5)])
+      iex> group([rect(10,20),rect(5,5)])
       %RectLayout.Group{
         rect: %RectLayout.Rect{x: 0, y: 0, width: 10, height: 20},
         children: [
@@ -25,7 +25,7 @@ defmodule RectLayout do
         ]
       }
   """
-  @doc subject: "Constructor"
+  @doc section: :constructor
   @spec group(list(Object.t())) :: Group.t()
   def group(children) do
     %Group{rect: surrounding_rect(children), children: children}
@@ -37,14 +37,14 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> rect(10, 20, 2, 5)
+      iex> rect(10, 20, 2, 5)
       %RectLayout.Rect{x: 2, y: 5, width: 10, height: 20}
 
-      iex(2)> rect(10, 20)
+      iex> rect(10, 20)
       %RectLayout.Rect{x: 0, y: 0, width: 10, height: 20}
 
   """
-  @doc subject: "Constructor"
+  @doc section: :constructor
   @spec rect(width :: number(), height :: number(), x :: number(), y :: number()) :: Rect.t()
   def rect(width, height, x \\ 0, y \\ 0) do
     %Rect{x: x, y: y, width: width, height: height}
@@ -55,16 +55,16 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> image = "my image"
+      iex> image = "my image"
       "my image"
-      iex(2)> sprite(rect(10, 20), image)
+      iex> sprite(rect(10, 20), image)
       %RectLayout.Sprite{
         rect: %RectLayout.Rect{x: 0, y: 0, width: 10, height: 20},
         content: "my image"
       }
 
   """
-  @doc subject: "Constructor"
+  @doc section: :constructor
   @spec sprite(Rect.t(), any()) :: Sprite.t()
   def sprite(rect, content) do
     %Sprite{rect: rect, content: content}
@@ -74,43 +74,67 @@ defmodule RectLayout do
   # ---------------------------
 
   @doc """
-  Get or update the content of a sprite.
+  Get the content of a sprite.
 
-    ## Examples
+  ## Examples
 
-      iex(1)> s = sprite(rect(10, 20), "one")
-      iex(2)> sprite_content(s)
+      iex> s = sprite(rect(10, 20), "one")
+      iex> sprite_content(s)
       "one"
-      iex(3)> sprite_content(s, "two")
-      %RectLayout.Sprite{
-        rect: %RectLayout.Rect{x: 0, y: 0, width: 10, height: 20},
-        content: "two"
-      }
+
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec sprite_content(Sprite.t()) :: any()
   def sprite_content(%Sprite{content: content}) do
     content
   end
 
+  @doc """
+  Update the content of a sprite.
+
+  ## Examples
+
+      iex> s = sprite(rect(10, 20), "one")
+      iex> sprite_content(s, "two")
+      %RectLayout.Sprite{
+        rect: %RectLayout.Rect{x: 0, y: 0, width: 10, height: 20},
+        content: "two"
+      }
+
+  """
+  @doc section: :accessor
   @spec sprite_content(Sprite.t(), any()) :: Sprite.t()
   def sprite_content(%Sprite{} = sprite, content) do
     %{sprite | content: content}
   end
 
   @doc """
-  Get or update the children of a group.
-  When updating it will also will update the bounding rect of the group.
+  Get the children of a group
 
-    ## Examples
+  ## Examples
 
-      iex(1)> g = group([rect(10, 20), rect(5, 5)])
-      iex(3)> group_children(g)
+      iex> g = group([rect(10, 20), rect(5, 5)])
+      iex> group_children(g)
       [
         %RectLayout.Rect{x: 0, y: 0, width: 10, height: 20},
         %RectLayout.Rect{x: 0, y: 0, width: 5, height: 5}
       ]
-      iex(1)> group_children(g, [rect(2, 2)])
+
+  """
+  @doc section: :accessor
+  @spec group_children(Group.t()) :: list(Object.t())
+  def group_children(%Group{children: children}) do
+    children
+  end
+
+  @doc """
+  Update the children of a group
+  When updating it will also will update the bounding rect of the group
+
+  ## Examples
+
+      iex> g = group([rect(10, 20), rect(5, 5)])
+      iex> group_children(g, [rect(2, 2)])
       %RectLayout.Group{
         rect: %RectLayout.Rect{x: 0, y: 0, width: 2, height: 2},
         children: [
@@ -119,12 +143,7 @@ defmodule RectLayout do
       }
 
   """
-  @doc subject: "Accessor"
-  @spec group_children(Group.t()) :: list(Object.t())
-  def group_children(%Group{children: children}) do
-    children
-  end
-
+  @doc section: :accessor
   @spec group_children(Group.t(), list(Object.t())) :: Group.t()
   def group_children(%Group{} = group, children) do
     %{group | rect: surrounding_rect(children), children: children}
@@ -133,7 +152,7 @@ defmodule RectLayout do
   @doc """
   Get the x attribute of the item. Shortcut for `RectLayout.Object.x/1`
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec x(Object.t()) :: number()
   def x(item) do
     Object.x(item)
@@ -142,7 +161,7 @@ defmodule RectLayout do
   @doc """
   Set the x attribute of the item. Shortcut for `RectLayout.Object.x/2`
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec x(Object.t(), number()) :: Object.t()
   def x(item, x) do
     Object.x(item, x)
@@ -151,7 +170,7 @@ defmodule RectLayout do
   @doc """
   Get the y attribute of the item. Shortcut for `RectLayout.Object.y/1`
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec y(Object.t()) :: number()
   def y(item) do
     Object.y(item)
@@ -160,7 +179,7 @@ defmodule RectLayout do
   @doc """
   Set the y attribute of the item. Shortcut for `RectLayout.Object.y/2`
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec y(Object.t(), number()) :: Object.t()
   def y(item, y) do
     Object.y(item, y)
@@ -169,7 +188,7 @@ defmodule RectLayout do
   @doc """
   Get the width attribute of the item. Shortcut for `RectLayout.Object.width/1`
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec width(Object.t()) :: number()
   def width(item) do
     Object.width(item)
@@ -178,7 +197,7 @@ defmodule RectLayout do
   @doc """
   Set the width attribute of the item. Shortcut for `RectLayout.Object.width/2`
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec width(Object.t(), number()) :: Object.t()
   def width(item, width) do
     Object.width(item, width)
@@ -187,7 +206,7 @@ defmodule RectLayout do
   @doc """
   Get the height attribute of the item. Shortcut for `RectLayout.Object.height/1`
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec height(Object.t()) :: number()
   def height(item) do
     Object.height(item)
@@ -196,7 +215,7 @@ defmodule RectLayout do
   @doc """
   Set the height attribute of the item. Shortcut for `RectLayout.Object.height/2`
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec height(Object.t(), number()) :: Object.t()
   def height(item, height) do
     Object.height(item, height)
@@ -213,11 +232,11 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> center_x(rect(3, 5))
+    iex> center_x(rect(3, 5))
     1.5
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec center_x(Object.t()) :: number()
   def center_x(value) do
     x(value) + width(value) / 2
@@ -235,12 +254,12 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> center_x(rect(3, 5), 5)
+    iex> center_x(rect(3, 5), 5)
     %RectLayout.Rect{x: 3.5, y: 0, width: 3, height: 5}
 
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec center_x(Object.t(), number()) :: Object.t()
   def center_x(value, x) do
     value |> x(x - width(value) / 2)
@@ -257,11 +276,11 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> center_y(rect(3, 5))
+    iex> center_y(rect(3, 5))
     2.5
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec center_y(Object.t()) :: number()
   def center_y(value) do
     y(value) + height(value) / 2
@@ -279,11 +298,11 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> center_y(rect(3, 5), 5)
+    iex> center_y(rect(3, 5), 5)
     %RectLayout.Rect{x: 0, y: 2.5, width: 3, height: 5}
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec center_y(Object.t(), number()) :: Object.t()
   def center_y(value, y) do
     value |> y(y - height(value) / 2)
@@ -294,11 +313,11 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> max_height([rect(2, 1), rect(3, 5, 1, 1), rect(4, 4, 1, 1)])
+    iex> max_height([rect(2, 1), rect(3, 5, 1, 1), rect(4, 4, 1, 1)])
     5
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec max_height(list(Object.t())) :: number()
   def max_height(rects) do
     rects |> Enum.map(&height/1) |> Enum.max()
@@ -309,11 +328,11 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> max_width([rect(2, 1), rect(3, 5, 1, 1), rect(4, 4, 1, 1)])
+    iex> max_width([rect(2, 1), rect(3, 5, 1, 1), rect(4, 4, 1, 1)])
     4
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec max_width(list(Object.t())) :: number()
   def max_width(rects) do
     rects |> Enum.map(&width/1) |> Enum.max()
@@ -334,11 +353,11 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> left([rect(2, 2), rect(2, 2, 2, 2)])
+    iex> left([rect(2, 2), rect(2, 2, 2, 2)])
     0
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec left(list(Object.t())) :: number()
   def left(rects) do
     rects |> Enum.map(&x/1) |> Enum.min()
@@ -358,11 +377,11 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> top([rect(2, 2), rect(2, 2, 2, 2)])
+    iex> top([rect(2, 2), rect(2, 2, 2, 2)])
     0
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec top(list(Object.t())) :: number()
   def top(rects) do
     rects |> Enum.map(&y/1) |> Enum.min()
@@ -383,15 +402,15 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> right(rect(2, 2))
+    iex> right(rect(2, 2))
     2
-    iex(2)> right(rect(2, 2, 2, 2))
+    iex> right(rect(2, 2, 2, 2))
     4
-    iex(3)> right([rect(2, 2), rect(2, 2, 2, 2)])
+    iex> right([rect(2, 2), rect(2, 2, 2, 2)])
     4
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec right(Object.t() | list(Object.t())) :: number()
   def right(items) when is_list(items) do
     items |> Enum.map(&right/1) |> Enum.max()
@@ -406,11 +425,11 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> right(rect(2, 2), 4)
+    iex> right(rect(2, 2), 4)
     %RectLayout.Rect{x: 2, y: 0, width: 2, height: 2}
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec right(Object.t(), number()) :: Object.t()
   def right(items, value) do
     x(items, value - width(items))
@@ -430,15 +449,15 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> bottom(rect(2, 2))
+    iex> bottom(rect(2, 2))
     2
-    iex(2)> bottom(rect(2, 2, 2, 2))
+    iex> bottom(rect(2, 2, 2, 2))
     4
-    iex(3)> bottom([rect(2, 2), rect(2, 2, 2, 2)])
+    iex> bottom([rect(2, 2), rect(2, 2, 2, 2)])
     4
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec bottom(Object.t() | list(Object.t())) :: number()
   def bottom(items) when is_list(items) do
     items |> Enum.map(&bottom/1) |> Enum.max()
@@ -453,11 +472,11 @@ defmodule RectLayout do
 
   ## Examples
 
-    iex(1)> bottom(rect(2, 2), 4)
+    iex> bottom(rect(2, 2), 4)
     %RectLayout.Rect{x: 0, y: 2, width: 2, height: 2}
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec bottom(Object.t(), number()) :: Object.t()
   def bottom(items, value) do
     y(items, value - height(items))
@@ -477,11 +496,11 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> surrounding_rect([rect(2, 2), rect(2, 2, 2, 2)])
+      iex> surrounding_rect([rect(2, 2), rect(2, 2, 2, 2)])
       %RectLayout.Rect{x: 0, y: 0, width: 4, height: 4}
 
   """
-  @doc subject: "Accessor"
+  @doc section: :accessor
   @spec surrounding_rect(list(Object.t())) :: Rect.t()
   def surrounding_rect(list) do
     rect(right(list) - left(list), bottom(list) - top(list), left(list), top(list))
@@ -501,14 +520,14 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> threshold_left(rect(2, 2), 1)
+      iex> threshold_left(rect(2, 2), 1)
       %RectLayout.Rect{x: 1, y: 0, width: 2, height: 2}
 
-      iex(2)> threshold_left(rect(2, 2, 5), 1)
+      iex> threshold_left(rect(2, 2, 5), 1)
       %RectLayout.Rect{x: 5, y: 0, width: 2, height: 2}
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec threshold_left(Object.t(), number()) :: Object.t()
   def threshold_left(item, value) do
     if(x(item) < value, do: x(item, value), else: item)
@@ -527,14 +546,14 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> threshold_right(rect(2, 2), 4)
+      iex> threshold_right(rect(2, 2), 4)
       %RectLayout.Rect{x: 0, y: 0, width: 2, height: 2}
 
-      iex(2)> threshold_right(rect(2, 2, 5), 4)
+      iex> threshold_right(rect(2, 2, 5), 4)
       %RectLayout.Rect{x: 2, y: 0, width: 2, height: 2}
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec threshold_right(Object.t(), number()) :: Object.t()
   def threshold_right(item, value) do
     if(right(item) > value, do: right(item, value), else: item)
@@ -551,14 +570,14 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> threshold_top(rect(2, 2), 2)
+      iex> threshold_top(rect(2, 2), 2)
       %RectLayout.Rect{x: 0, y: 2, width: 2, height: 2}
 
-      iex(2)> threshold_top(rect(2, 2, 0, 5), 2)
+      iex> threshold_top(rect(2, 2, 0, 5), 2)
       %RectLayout.Rect{x: 0, y: 5, width: 2, height: 2}
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec threshold_top(Object.t(), number()) :: Object.t()
   def threshold_top(item, value) do
     if(y(item) < value, do: y(item, value), else: item)
@@ -575,14 +594,14 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> threshold_bottom(rect(2, 2), 5)
+      iex> threshold_bottom(rect(2, 2), 5)
       %RectLayout.Rect{x: 0, y: 0, width: 2, height: 2}
 
-      iex(2)> threshold_bottom(rect(2, 2, 0, 5), 4)
+      iex> threshold_bottom(rect(2, 2, 0, 5), 4)
       %RectLayout.Rect{x: 0, y: 2, width: 2, height: 2}
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec threshold_bottom(Object.t(), number()) :: Object.t()
   def threshold_bottom(item, value) do
     if(bottom(item) > value, do: bottom(item, value), else: item)
@@ -600,14 +619,14 @@ defmodule RectLayout do
                  *-------*
   ## Examples
 
-      iex(1)> extrude(rect(2, 2), 1)
+      iex> extrude(rect(2, 2), 1)
       %RectLayout.Rect{x: -1, y: -1, width: 4, height: 4}
 
-      iex(2)> extrude(rect(4, 4), -1)
+      iex> extrude(rect(4, 4), -1)
       %RectLayout.Rect{x: 1, y: 1, width: 2, height: 2}
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec extrude(item :: Object.t(), number()) :: Object.t()
   def extrude(item, value) do
     item
@@ -623,17 +642,17 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> constrain_width(rect(2, 4), 4)
+      iex> constrain_width(rect(2, 4), 4)
       %RectLayout.Rect{x: 0, y: 0, width: 4, height: 8.0}
 
-      iex(2)> constrain_width([rect(2, 4), rect(8, 4)], 4)
+      iex> constrain_width([rect(2, 4), rect(8, 4)], 4)
       [
         %RectLayout.Rect{x: 0, y: 0, width: 4, height: 8.0},
         %RectLayout.Rect{x: 0, y: 0, width: 4, height: 2.0}
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec constrain_width(items :: list(Object.t()), value :: number()) :: list(Object.t())
   def constrain_width(items, value) when is_list(items) do
     items |> Enum.map(&constrain_width(&1, value))
@@ -650,17 +669,17 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> constrain_height(rect(4, 2), 4)
+      iex> constrain_height(rect(4, 2), 4)
       %RectLayout.Rect{x: 0, y: 0, width: 8.0, height: 4}
 
-      iex(2)> constrain_height([rect(4, 2), rect(4, 8)], 4)
+      iex> constrain_height([rect(4, 2), rect(4, 8)], 4)
       [
         %RectLayout.Rect{x: 0, y: 0, width: 8.0, height: 4},
         %RectLayout.Rect{x: 0, y: 0, width: 2.0, height: 4}
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec constrain_height(items :: list(Object.t()), value :: number()) :: list(Object.t())
   def constrain_height(item, value) when is_list(item) do
     item |> Enum.map(&constrain_height(&1, value))
@@ -694,7 +713,7 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec align_left(list(Object.t())) :: list(Object.t())
   def align_left(items) do
     items |> Enum.map(&x(&1, left(items)))
@@ -723,7 +742,7 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec align_left(list(Object.t()), value :: number()) :: list(Object.t())
   def align_left(items, value) do
     items |> Enum.map(&x(&1, value))
@@ -750,7 +769,7 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec align_top(list(Object.t())) :: list(Object.t())
   def align_top(items) do
     items |> Enum.map(&y(&1, top(items)))
@@ -778,16 +797,43 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec align_top(items :: list(Object.t()), value :: number()) :: list(Object.t())
   def align_top(items, value) do
     items |> Enum.map(&y(&1, value))
   end
 
   @doc """
-  Align each item to a given x value to the right
-  Can skip the x value which will pick the rightmost item
+  Align each item to the rightmost item
 
+
+  ## Visual
+
+                           |
+      *--*              *--*
+      |  |              |  |
+      *--*        ->    *--*
+           *---*       *---*
+           |   |       |   |
+           *---*       *---*
+                           |
+  ## Examples
+
+      iex> align_right([rect(2, 2), rect(3, 3, 2, 2)])
+      [
+        %RectLayout.Rect{x: 3, y: 0, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: 2, width: 3, height: 3}
+      ]
+
+  """
+  @doc section: :transform
+  @spec align_right(items :: list(Object.t())) :: list(Object.t())
+  def align_right(items) do
+    items |> Enum.map(&right(&1, right(items)))
+  end
+
+  @doc """
+  Align each item to a given x value to the right
 
   ## Visual
 
@@ -801,25 +847,14 @@ defmodule RectLayout do
                  |            |
   ## Examples
 
-      iex(1)> align_right([rect(2, 2), rect(3, 3, 2, 2)], 6)
+      iex> align_right([rect(2, 2), rect(3, 3, 2, 2)], 6)
       [
         %RectLayout.Rect{x: 4, y: 0, width: 2, height: 2},
         %RectLayout.Rect{x: 3, y: 2, width: 3, height: 3}
       ]
 
-      iex(2)> align_right([rect(2, 2), rect(3, 3, 2, 2)])
-      [
-        %RectLayout.Rect{x: 3, y: 0, width: 2, height: 2},
-        %RectLayout.Rect{x: 2, y: 2, width: 3, height: 3}
-      ]
-
   """
-  @doc subject: "Transform"
-  @spec align_right(items :: list(Object.t())) :: list(Object.t())
-  def align_right(items) do
-    items |> Enum.map(&right(&1, right(items)))
-  end
-
+  @doc section: :transform
   @spec align_right(items :: list(Object.t()), value :: number()) :: list(Object.t())
   def align_right(items, value) do
     items |> Enum.map(&right(&1, value))
@@ -846,7 +881,7 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec align_bottom(items :: list(Object.t())) :: list(Object.t())
   def align_bottom(items) do
     items |> Enum.map(&bottom(&1, bottom(items)))
@@ -874,7 +909,7 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec align_bottom(items :: list(Object.t()), value :: number()) :: list(Object.t())
   def align_bottom(items, value) do
     items |> Enum.map(&bottom(&1, value))
@@ -905,21 +940,21 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> spread_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
+      iex> spread_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
       [
         %RectLayout.Rect{x: 1.0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 3.5, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 6.0, y: 2, width: 3, height: 3}
       ]
 
-      iex(2)> spread_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
+      iex> spread_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
       [
         %RectLayout.Rect{x: 0.5, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 3.5, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 7.5, y: 2, width: 3, height: 3}
       ]
 
-      iex(3)> spread_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, x: 2)
+      iex> spread_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, x: 2)
       [
         %RectLayout.Rect{x: 3.0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 5.5, y: 1, width: 2, height: 2},
@@ -933,7 +968,7 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @type spread_horizontal_option :: [{:x, number()} | {:gap, number()} | {:cols, number()}]
   @spec spread_horizontal(
           items :: list(Object.t()),
@@ -994,21 +1029,21 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> spread_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
+      iex> spread_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
       [
         %RectLayout.Rect{x: 0, y: 1.0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 3.5, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 6.0, width: 3, height: 3}
       ]
 
-      iex(2)> spread_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
+      iex> spread_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
       [
         %RectLayout.Rect{x: 0, y: 0.5, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 3.5, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 7.5, width: 3, height: 3}
       ]
 
-      iex(3)> spread_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, y: 2)
+      iex> spread_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, y: 2)
       [
         %RectLayout.Rect{x: 0, y: 3.0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 5.5, width: 2, height: 2},
@@ -1022,7 +1057,7 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @type spread_vertical_option :: [{:x, number()} | {:gap, number()} | {:cols, number()}]
   @spec spread_vertical(
           items :: list(Object.t()),
@@ -1061,7 +1096,7 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> distribute_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12)
+      iex> distribute_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12)
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 4.0, y: 1, width: 2, height: 2},
@@ -1069,7 +1104,7 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec distribute_horizontal(items :: list(Object.t()), width :: number()) :: list(Object.t())
   def distribute_horizontal(items, width) when is_list(items) do
     gap = (width - (items |> Enum.map(&width(&1)) |> Enum.sum())) / (length(items) - 1)
@@ -1101,7 +1136,7 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> distribute_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12)
+      iex> distribute_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12)
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 4.0, width: 2, height: 2},
@@ -1109,7 +1144,7 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @spec distribute_vertical(items :: list(Object.t()), height :: number()) :: list(Object.t())
   def distribute_vertical(items, height) when is_list(items) do
     gap = (height - (items |> Enum.map(&height(&1)) |> Enum.sum())) / (length(items) - 1)
@@ -1135,21 +1170,21 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> flow_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)])
+      iex> flow_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)])
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 3, y: 2, width: 3, height: 3}
       ]
 
-      iex(2)> flow_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2)
+      iex> flow_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2)
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 3, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 7, y: 2, width: 3, height: 3}
       ]
 
-      iex(3)> flow_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, x: 2)
+      iex> flow_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, x: 2)
       [
         %RectLayout.Rect{x: 2, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 5, y: 1, width: 2, height: 2},
@@ -1157,7 +1192,7 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @type flow_horizontal_option :: [{:x, number()} | {:gap, number()}]
   @spec flow_horizontal(items :: list(Object.t()), opts :: flow_horizontal_option()) ::
           list(Object.t())
@@ -1194,21 +1229,21 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> flow_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)])
+      iex> flow_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)])
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 3, width: 3, height: 3}
       ]
 
-      iex(2)> flow_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2)
+      iex> flow_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2)
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 3, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 7, width: 3, height: 3}
       ]
 
-      iex(3)> flow_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, y: 2)
+      iex> flow_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, y: 2)
       [
         %RectLayout.Rect{x: 0, y: 2, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 5, width: 2, height: 2},
@@ -1216,7 +1251,7 @@ defmodule RectLayout do
       ]
 
   """
-  @doc subject: "Transform"
+  @doc section: :transform
   @type flow_vertical_option :: [{:y, number()} | {:gap, number()}]
   @spec flow_vertical(items :: list(Object.t()), opts :: flow_vertical_option()) ::
           list(Object.t())

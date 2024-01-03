@@ -4,7 +4,7 @@ defmodule RectLayout.MixProject do
   def project do
     [
       app: :rect_layout,
-      version: "0.1.1",
+      version: "0.1.2",
       elixir: "~> 1.15",
       description: description(),
       start_permanent: Mix.env() == :prod,
@@ -25,7 +25,12 @@ defmodule RectLayout.MixProject do
   def docs do
     [
       main: "readme",
-      extras: ["README.md", "LICENSE.md"]
+      extras: ["README.md", "LICENSE.md"],
+      groups_for_docs: [
+        Constructor: &(&1[:section] == :constructor),
+        Transform: &(&1[:section] == :transform),
+        Accessor: &(&1[:section] == :accessor)
+      ]
     ]
   end
 
