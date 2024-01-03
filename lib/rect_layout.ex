@@ -5,10 +5,10 @@ defmodule RectLayout do
   Use `import RectLayout` to import everything, or import only the methods you need.
   """
 
-  alias RectLayout.Object
   alias RectLayout.Group
-  alias RectLayout.Sprite
+  alias RectLayout.Object
   alias RectLayout.Rect
+  alias RectLayout.Sprite
 
   @doc """
   Creates an `%RectLayout.Group{}`, used to work with a group of graphical items.
@@ -790,10 +790,10 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex> align_top([rect(2, 2), rect(3, 3, 2, 2)])
+      iex> align_top([rect(2, 2), rect(3, 3, 2, 2)], -2)
       [
-        %RectLayout.Rect{x: 0, y: 0, width: 2, height: 2},
-        %RectLayout.Rect{x: 2, y: 0, width: 3, height: 3}
+        %RectLayout.Rect{x: 0, y: -2, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: -2, width: 3, height: 3}
       ]
 
   """

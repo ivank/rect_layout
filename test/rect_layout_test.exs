@@ -7,6 +7,24 @@ defmodule RectLayoutTest do
   doctest RectLayout
 
   describe "RectLayout" do
+    test "group getters" do
+      g = group([rect(10, 20, 2, 3), rect(20, 50, 7, 10)])
+
+      assert x(g) == 2
+      assert y(g) == 3
+      assert width(g) == 25
+      assert height(g) == 57
+    end
+
+    test "group setters" do
+      g = group([rect(2, 2), rect(4, 4, 2, 2)])
+
+      assert x(g, 2) == group([rect(2, 2, 2), rect(4, 4, 4, 2)])
+      assert y(g, 2) == group([rect(2, 2, 0, 2), rect(4, 4, 2, 4)])
+      assert width(g, 12) == group([rect(4, 2), rect(8, 4, 4, 2)])
+      assert height(g, 12) == group([rect(2, 4), rect(4, 8, 2, 4)])
+    end
+
     test "transform real test" do
       rects = [
         rect(1000, 424),
@@ -83,26 +101,26 @@ defmodule RectLayoutTest do
       expected = [
         group([
           group([
-            sprite(rect(12040.0, 24080.0, 0, 16040.0), r1),
-            sprite(rect(40.0, 25.0, 6000.0, 40128.0), "ROC"),
-            sprite(rect(1460, 50.0, 5290.0, 40161.0), "R1")
+            sprite(rect(12_040.0, 24_080.0, 0, 16_040.0), r1),
+            sprite(rect(40.0, 25.0, 6_000.0, 40_128.0), "ROC"),
+            sprite(rect(1_460, 50.0, 5_290.0, 40_161.0), "R1")
           ]),
           group([
-            sprite(rect(10020.0, 40080.0, 12080.0, 40.0), r2),
-            sprite(rect(40.0, 25.0, 17070.0, 40128.0), "USSR"),
-            sprite(rect(1460, 50.0, 16360.0, 40161.0), "R2")
+            sprite(rect(10_020.0, 40_080.0, 12_080.0, 40.0), r2),
+            sprite(rect(40.0, 25.0, 17_070.0, 40_128.0), "USSR"),
+            sprite(rect(1_460, 50.0, 16_360.0, 40_161.0), "R2")
           ])
         ]),
         group([
           group([
-            sprite(rect(22624.0, 48480.0, 0, 40251.0), r3),
-            sprite(rect(40.0, 25.0, 11292.0, 88739.0), "US"),
-            sprite(rect(1460, 50.0, 10582.0, 88772.0), "R3")
+            sprite(rect(22_624.0, 48_480.0, 0, 40_251.0), r3),
+            sprite(rect(40.0, 25.0, 11_292.0, 88_739.0), "US"),
+            sprite(rect(1_460, 50.0, 10_582.0, 88_772.0), "R3")
           ]),
           group([
-            sprite(rect(6240.0, 28080.0, 22664.0, 60651.0), r4),
-            sprite(rect(40.0, 25.0, 25764.0, 88739.0), "CN"),
-            sprite(rect(1460, 50.0, 25054.0, 88772.0), "R4")
+            sprite(rect(6_240.0, 28_080.0, 22_664.0, 60_651.0), r4),
+            sprite(rect(40.0, 25.0, 25_764.0, 88_739.0), "CN"),
+            sprite(rect(1_460, 50.0, 25_054.0, 88_772.0), "R4")
           ])
         ])
       ]

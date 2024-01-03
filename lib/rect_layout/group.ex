@@ -3,7 +3,7 @@ defmodule RectLayout.Group do
   Represent a group of graphical object, moves and scales them together proportionally
 
   Any change to its `x` and `y` would change all of its children with the same amount
-  Any change in `width` and `height` would be propogated to its children propotionally
+  Any change in `width` and `height` would be propagated to its children proportionally
 
   Should not be created directly but by using the `RectLayout.group/1` constructor
 
