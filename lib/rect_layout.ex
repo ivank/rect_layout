@@ -608,7 +608,7 @@ defmodule RectLayout do
 
   """
   @doc subject: "Transform"
-  @spec extrude(Object.t(), number()) :: Object.t()
+  @spec extrude(item :: Object.t(), number()) :: Object.t()
   def extrude(item, value) do
     item
     |> x(x(item) - value)
@@ -634,14 +634,14 @@ defmodule RectLayout do
 
   """
   @doc subject: "Transform"
-  @spec constrain_width(list(Object.t()), number()) :: list(Object.t())
-  def constrain_width(item, to) when is_list(item) do
-    item |> Enum.map(&constrain_width(&1, to))
+  @spec constrain_width(items :: list(Object.t()), value :: number()) :: list(Object.t())
+  def constrain_width(items, value) when is_list(items) do
+    items |> Enum.map(&constrain_width(&1, value))
   end
 
-  @spec constrain_width(Object.t(), number()) :: Object.t()
-  def constrain_width(item, to) do
-    item |> width(to) |> height(height(item) / width(item) * to)
+  @spec constrain_width(item :: Object.t(), value :: number()) :: Object.t()
+  def constrain_width(item, value) do
+    item |> width(value) |> height(height(item) / width(item) * value)
   end
 
   @doc """
@@ -661,41 +661,33 @@ defmodule RectLayout do
 
   """
   @doc subject: "Transform"
-  @spec constrain_height(list(Object.t()), number()) :: list(Object.t())
-  def constrain_height(item, to) when is_list(item) do
-    item |> Enum.map(&constrain_height(&1, to))
+  @spec constrain_height(items :: list(Object.t()), value :: number()) :: list(Object.t())
+  def constrain_height(item, value) when is_list(item) do
+    item |> Enum.map(&constrain_height(&1, value))
   end
 
-  @spec constrain_height(Object.t(), number()) :: Object.t()
-  def constrain_height(item, to) do
-    item |> height(to) |> width(width(item) / height(item) * to)
+  @spec constrain_height(item :: Object.t(), value :: number()) :: Object.t()
+  def constrain_height(item, value) do
+    item |> height(value) |> width(width(item) / height(item) * value)
   end
 
   @doc """
-  Align each item to a given x value to the left
-  Can skip the x value which will pick the leftmost item
-
+  Align each item the leftmost item
 
   ## Visual
 
-      |                    |
-      | *--*               *--*
-      | |  |               |  |
-      | *--*               *--*
-      |      *---*   ->    *---*
-      |      |   |         |   |
-      |      *---*         *---*
-      |                    |
+                        |
+      *--*              *--*
+      |  |              |  |
+      *--*              *--*
+           *---*   ->   *---*
+           |   |        |   |
+           *---*        *---*
+                        |
 
   ## Examples
 
-      iex(1)> align_left([rect(2, 2), rect(3, 3, 2, 2)], -2)
-      [
-        %RectLayout.Rect{x: -2, y: 0, width: 2, height: 2},
-        %RectLayout.Rect{x: -2, y: 2, width: 3, height: 3}
-      ]
-
-      iex(2)> align_left([rect(2, 2), rect(3, 3, 2, 2)])
+      iex> align_left([rect(2, 2), rect(3, 3, 2, 2)])
       [
         %RectLayout.Rect{x: 0, y: 0, width: 2, height: 2},
         %RectLayout.Rect{x: 0, y: 2, width: 3, height: 3}
@@ -704,14 +696,12 @@ defmodule RectLayout do
   """
   @doc subject: "Transform"
   @spec align_left(list(Object.t())) :: list(Object.t())
-  def align_left(items), do: items |> Enum.map(&x(&1, left(items)))
-
-  @spec align_left(list(Object.t()), number()) :: list(Object.t())
-  def align_left(items, to), do: items |> Enum.map(&x(&1, to))
+  def align_left(items) do
+    items |> Enum.map(&x(&1, left(items)))
+  end
 
   @doc """
-  Align each item to a given y value
-  Can skip the y value which will pick the topmost item
+  Align each item to a given x value to the left
 
   ## Visual
 
@@ -726,13 +716,34 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> align_top([rect(2, 2), rect(3, 3, 2, 2)], -2)
+      iex> align_left([rect(2, 2), rect(3, 3, 2, 2)], -2)
       [
-        %RectLayout.Rect{x: 0, y: -2, width: 2, height: 2},
-        %RectLayout.Rect{x: 2, y: -2, width: 3, height: 3}
+        %RectLayout.Rect{x: -2, y: 0, width: 2, height: 2},
+        %RectLayout.Rect{x: -2, y: 2, width: 3, height: 3}
       ]
 
-      iex(2)> align_top([rect(2, 2), rect(3, 3, 2, 2)])
+  """
+  @doc subject: "Transform"
+  @spec align_left(list(Object.t()), value :: number()) :: list(Object.t())
+  def align_left(items, value) do
+    items |> Enum.map(&x(&1, value))
+  end
+
+  @doc """
+  Align each item to the topmost item
+
+  ## Visual
+
+      *--*            -*--*-*---*-
+      |  |             |  | |   |
+      *--*         ->  *--* *---*
+            *---*
+            |   |
+            *---*
+
+  ## Examples
+
+      iex> align_top([rect(2, 2), rect(3, 3, 2, 2)])
       [
         %RectLayout.Rect{x: 0, y: 0, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 0, width: 3, height: 3}
@@ -741,10 +752,37 @@ defmodule RectLayout do
   """
   @doc subject: "Transform"
   @spec align_top(list(Object.t())) :: list(Object.t())
-  def align_top(items), do: items |> Enum.map(&y(&1, top(items)))
+  def align_top(items) do
+    items |> Enum.map(&y(&1, top(items)))
+  end
 
-  @spec align_top(list(Object.t()), number()) :: list(Object.t())
-  def align_top(items, to), do: items |> Enum.map(&y(&1, to))
+  @doc """
+  Align each item to a given y value
+
+  ## Visual
+
+      ------------    -*--*-*---*-
+      *--*             |  | |   |
+      |  |             *--* *---*
+      *--*         ->
+            *---*
+            |   |
+            *---*
+
+  ## Examples
+
+      iex> align_top([rect(2, 2), rect(3, 3, 2, 2)])
+      [
+        %RectLayout.Rect{x: 0, y: 0, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: 0, width: 3, height: 3}
+      ]
+
+  """
+  @doc subject: "Transform"
+  @spec align_top(items :: list(Object.t()), value :: number()) :: list(Object.t())
+  def align_top(items, value) do
+    items |> Enum.map(&y(&1, value))
+  end
 
   @doc """
   Align each item to a given x value to the right
@@ -777,15 +815,45 @@ defmodule RectLayout do
 
   """
   @doc subject: "Transform"
-  @spec align_right(list(Object.t())) :: list(Object.t())
-  def align_right(items), do: items |> Enum.map(&right(&1, right(items)))
+  @spec align_right(items :: list(Object.t())) :: list(Object.t())
+  def align_right(items) do
+    items |> Enum.map(&right(&1, right(items)))
+  end
 
-  @spec align_right(list(Object.t()), number()) :: list(Object.t())
-  def align_right(items, to), do: items |> Enum.map(&right(&1, to))
+  @spec align_right(items :: list(Object.t()), value :: number()) :: list(Object.t())
+  def align_right(items, value) do
+    items |> Enum.map(&right(&1, value))
+  end
+
+  @doc """
+  Align each item to the bottommost item
+
+  ## Visual
+
+      *--*
+      |  |
+      *--*         ->
+            *---*      *--* *---*
+            |   |      |  | |   |
+            *---*     -*--*-*---*-
+
+  ## Examples
+
+      iex> align_bottom([rect(2, 2), rect(3, 3, 2, 2)])
+      [
+        %RectLayout.Rect{x: 0, y: 3, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: 2, width: 3, height: 3}
+      ]
+
+  """
+  @doc subject: "Transform"
+  @spec align_bottom(items :: list(Object.t())) :: list(Object.t())
+  def align_bottom(items) do
+    items |> Enum.map(&bottom(&1, bottom(items)))
+  end
 
   @doc """
   Align each item to a given y value
-  Can skip the y value which will pick the bottommost item
 
   ## Visual
 
@@ -799,25 +867,18 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex(1)> align_bottom([rect(2, 2), rect(3, 3, 2, 2)], 6)
+      iex> align_bottom([rect(2, 2), rect(3, 3, 2, 2)], 6)
       [
         %RectLayout.Rect{x: 0, y: 4, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 3, width: 3, height: 3}
       ]
 
-      iex(2)> align_bottom([rect(2, 2), rect(3, 3, 2, 2)])
-      [
-        %RectLayout.Rect{x: 0, y: 3, width: 2, height: 2},
-        %RectLayout.Rect{x: 2, y: 2, width: 3, height: 3}
-      ]
-
   """
   @doc subject: "Transform"
-  @spec align_bottom(list(Object.t())) :: list(Object.t())
-  def align_bottom(items), do: items |> Enum.map(&bottom(&1, bottom(items)))
-
-  @spec align_bottom(list(Object.t()), number()) :: list(Object.t())
-  def align_bottom(items, to), do: items |> Enum.map(&bottom(&1, to))
+  @spec align_bottom(items :: list(Object.t()), value :: number()) :: list(Object.t())
+  def align_bottom(items, value) do
+    items |> Enum.map(&bottom(&1, value))
+  end
 
   @doc """
   Spread out each item in the list horizontally to cover the assigned `width`
@@ -873,9 +934,12 @@ defmodule RectLayout do
 
   """
   @doc subject: "Transform"
-  @type spread_horizontal_option :: {:x, number()} | {:gap, number()} | {:cols, number()}
-  @spec spread_horizontal(list(Object.t()), number(), [spread_horizontal_option()]) ::
-          list(Object.t())
+  @type spread_horizontal_option :: [{:x, number()} | {:gap, number()} | {:cols, number()}]
+  @spec spread_horizontal(
+          items :: list(Object.t()),
+          width :: number(),
+          opts :: spread_horizontal_option()
+        ) :: list(Object.t())
   def spread_horizontal(items, width, opts \\ []) when is_list(items) do
     opts = opts |> Keyword.validate!(x: 0, cols: length(items), gap: 0)
     col_width = width / opts[:cols]
@@ -959,9 +1023,12 @@ defmodule RectLayout do
 
   """
   @doc subject: "Transform"
-  @type spread_vertical_option :: {:x, number()} | {:gap, number()} | {:cols, number()}
-  @spec spread_vertical(list(Object.t()), number(), [spread_vertical_option()]) ::
-          list(Object.t())
+  @type spread_vertical_option :: [{:x, number()} | {:gap, number()} | {:cols, number()}]
+  @spec spread_vertical(
+          items :: list(Object.t()),
+          height :: number(),
+          opts :: spread_vertical_option()
+        ) :: list(Object.t())
   def spread_vertical(items, height, opts \\ []) when is_list(items) do
     opts = opts |> Keyword.validate!(y: 0, rows: length(items), gap: 0)
     row_height = height / opts[:rows]
@@ -1003,7 +1070,7 @@ defmodule RectLayout do
 
   """
   @doc subject: "Transform"
-  @spec distribute_horizontal(list(Object.t()), number()) :: list(Object.t())
+  @spec distribute_horizontal(items :: list(Object.t()), width :: number()) :: list(Object.t())
   def distribute_horizontal(items, width) when is_list(items) do
     gap = (width - (items |> Enum.map(&width(&1)) |> Enum.sum())) / (length(items) - 1)
     items |> Enum.map_reduce(0, &{x(&1, &2), &2 + width(&1) + gap}) |> elem(0)
@@ -1043,7 +1110,7 @@ defmodule RectLayout do
 
   """
   @doc subject: "Transform"
-  @spec distribute_vertical(list(Object.t()), number()) :: list(Object.t())
+  @spec distribute_vertical(items :: list(Object.t()), height :: number()) :: list(Object.t())
   def distribute_vertical(items, height) when is_list(items) do
     gap = (height - (items |> Enum.map(&height(&1)) |> Enum.sum())) / (length(items) - 1)
     items |> Enum.map_reduce(0, &{y(&1, &2), &2 + height(&1) + gap}) |> elem(0)
@@ -1082,10 +1149,18 @@ defmodule RectLayout do
         %RectLayout.Rect{x: 7, y: 2, width: 3, height: 3}
       ]
 
+      iex(3)> flow_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, x: 2)
+      [
+        %RectLayout.Rect{x: 2, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: 5, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: 9, y: 2, width: 3, height: 3}
+      ]
+
   """
   @doc subject: "Transform"
-  @type flow_horizontal_option :: {:x, number()} | {:gap, number()}
-  @spec flow_horizontal(list(Object.t()), [flow_horizontal_option()]) :: list(Object.t())
+  @type flow_horizontal_option :: [{:x, number()} | {:gap, number()}]
+  @spec flow_horizontal(items :: list(Object.t()), opts :: flow_horizontal_option()) ::
+          list(Object.t())
   def flow_horizontal(items, opts \\ []) when is_list(items) do
     opts = opts |> Keyword.validate!(x: 0, gap: 0)
     items |> Enum.map_reduce(opts[:x], &{x(&1, &2), &2 + width(&1) + opts[:gap]}) |> elem(0)
@@ -1133,10 +1208,18 @@ defmodule RectLayout do
         %RectLayout.Rect{x: 2, y: 7, width: 3, height: 3}
       ]
 
+      iex(3)> flow_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, y: 2)
+      [
+        %RectLayout.Rect{x: 0, y: 2, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: 5, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: 9, width: 3, height: 3}
+      ]
+
   """
   @doc subject: "Transform"
-  @type flow_vertical_option :: {:x, number()} | {:gap, number()}
-  @spec flow_vertical(list(Object.t()), [flow_vertical_option()]) :: list(Object.t())
+  @type flow_vertical_option :: [{:y, number()} | {:gap, number()}]
+  @spec flow_vertical(items :: list(Object.t()), opts :: flow_vertical_option()) ::
+          list(Object.t())
   def flow_vertical(items, opts \\ []) when is_list(items) do
     opts = opts |> Keyword.validate!(y: 0, gap: 0)
     items |> Enum.map_reduce(opts[:y], &{y(&1, &2), &2 + height(&1) + opts[:gap]}) |> elem(0)
