@@ -60,7 +60,7 @@ defmodule RectLayoutTest do
       r4 = %{image_meta: %{width: 10, height: 45}, height: 70.2, flag: "CN", name: "R4"}
       rockets = [r1, r2, r3, r4]
 
-      row_height_zoom = 400
+      row_height_zoom = 10
       width = 3000
       cols = 2
       gap = 40
@@ -101,26 +101,26 @@ defmodule RectLayoutTest do
       expected = [
         group([
           group([
-            sprite(rect(12_040.0, 24_080.0, 0, 16_040.0), r1),
-            sprite(rect(40.0, 25.0, 6_000.0, 40_128.0), "ROC"),
-            sprite(rect(1_460, 50.0, 5_290.0, 40_161.0), "R1")
+            sprite(rect(301.0, 602.0, 639.5, 440.0), r1),
+            sprite(rect(40.0, 25.0, 770.0, 1050.0), "ROC"),
+            sprite(rect(1_460, 50.0, 60.0, 1083.0), "R1")
           ]),
           group([
-            sprite(rect(10_020.0, 40_080.0, 12_080.0, 40.0), r2),
-            sprite(rect(40.0, 25.0, 17_070.0, 40_128.0), "USSR"),
-            sprite(rect(1_460, 50.0, 16_360.0, 40_161.0), "R2")
+            sprite(rect(250.5, 1002.0, 2164.75, 40.0), r2),
+            sprite(rect(40.0, 25.0, 2270.0, 1050.0), "USSR"),
+            sprite(rect(1_460, 50.0, 1560.0, 1083.0), "R2")
           ])
         ]),
         group([
           group([
-            sprite(rect(22_624.0, 48_480.0, 0, 40_251.0), r3),
-            sprite(rect(40.0, 25.0, 11_292.0, 88_739.0), "US"),
-            sprite(rect(1_460, 50.0, 10_582.0, 88_772.0), "R3")
+            sprite(rect(565.6, 1212.0, 507.2, 1173.0), r3),
+            sprite(rect(40.0, 25.0, 770.0, 2393.0), "US"),
+            sprite(rect(1_460, 50.0, 60.0, 2426.0), "R3")
           ]),
           group([
-            sprite(rect(6_240.0, 28_080.0, 22_664.0, 60_651.0), r4),
-            sprite(rect(40.0, 25.0, 25_764.0, 88_739.0), "CN"),
-            sprite(rect(1_460, 50.0, 25_054.0, 88_772.0), "R4")
+            sprite(rect(156.0, 702.0, 2212.0, 1683.0), r4),
+            sprite(rect(40.0, 25.0, 2270.0, 2393.0), "CN"),
+            sprite(rect(1_460, 50.0, 1560.0, 2426.0), "R4")
           ])
         ])
       ]

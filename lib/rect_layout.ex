@@ -526,9 +526,14 @@ defmodule RectLayout do
       iex> threshold_left(rect(2, 2, 5), 1)
       %RectLayout.Rect{x: 5, y: 0, width: 2, height: 2}
 
+      iex> threshold_left(rect(2, 2, 5), nil)
+      %RectLayout.Rect{x: 5, y: 0, width: 2, height: 2}
+
   """
   @doc section: :transform
-  @spec threshold_left(Object.t(), number()) :: Object.t()
+  @spec threshold_left(Object.t(), number() | nil) :: Object.t()
+  def threshold_left(item, nil), do: item
+
   def threshold_left(item, value) do
     if(x(item) < value, do: x(item, value), else: item)
   end
@@ -552,9 +557,14 @@ defmodule RectLayout do
       iex> threshold_right(rect(2, 2, 5), 4)
       %RectLayout.Rect{x: 2, y: 0, width: 2, height: 2}
 
+      iex> threshold_right(rect(2, 2, 5), nil)
+      %RectLayout.Rect{x: 5, y: 0, width: 2, height: 2}
+
   """
   @doc section: :transform
-  @spec threshold_right(Object.t(), number()) :: Object.t()
+  @spec threshold_right(Object.t(), number() | nil) :: Object.t()
+  def threshold_right(item, nil), do: item
+
   def threshold_right(item, value) do
     if(right(item) > value, do: right(item, value), else: item)
   end
@@ -579,6 +589,8 @@ defmodule RectLayout do
   """
   @doc section: :transform
   @spec threshold_top(Object.t(), number()) :: Object.t()
+  def threshold_top(item, nil), do: item
+
   def threshold_top(item, value) do
     if(y(item) < value, do: y(item, value), else: item)
   end
@@ -600,9 +612,14 @@ defmodule RectLayout do
       iex> threshold_bottom(rect(2, 2, 0, 5), 4)
       %RectLayout.Rect{x: 0, y: 2, width: 2, height: 2}
 
+      iex> threshold_bottom(rect(2, 2, 0, 5), nil)
+      %RectLayout.Rect{x: 0, y: 5, width: 2, height: 2}
+
   """
   @doc section: :transform
-  @spec threshold_bottom(Object.t(), number()) :: Object.t()
+  @spec threshold_bottom(Object.t(), number() | nil) :: Object.t()
+  def threshold_bottom(item, nil), do: item
+
   def threshold_bottom(item, value) do
     if(bottom(item) > value, do: bottom(item, value), else: item)
   end
@@ -983,7 +1000,7 @@ defmodule RectLayout do
       rect =
         rect
         |> center_x(opts[:x] + col_width * index + offset)
-        |> threshold_left(if(prev, do: opts[:gap] + right(prev), else: x(rect)))
+        |> threshold_left(if(prev, do: opts[:gap] + right(prev), else: nil))
 
       {rect, rect}
     end)
@@ -1015,31 +1032,38 @@ defmodule RectLayout do
 
   ## Examples
 
+      iex> spread_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, x: 12)
+      [
+        %RectLayout.Rect{x: 10.0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: 6.5, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: 3.0, y: 2, width: 3, height: 3}
+      ]
+
       iex> spread_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
       [
-        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
-        %RectLayout.Rect{x: -2.5, y: 1, width: 2, height: 2},
-        %RectLayout.Rect{x: -6.0, y: 2, width: 3, height: 3}
+        %RectLayout.Rect{x: -2.0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: -5.5, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: -9.0, y: 2, width: 3, height: 3}
       ]
 
       iex> spread_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
       [
-        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
-        %RectLayout.Rect{x: -4, y: 1, width: 2, height: 2},
-        %RectLayout.Rect{x: -9, y: 2, width: 3, height: 3}
+        %RectLayout.Rect{x: -1.5, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: -5.5, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: -10.5, y: 2, width: 3, height: 3}
       ]
 
       iex> spread_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, x: 2)
       [
-        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
-        %RectLayout.Rect{x: -2, y: 1, width: 2, height: 2},
-        %RectLayout.Rect{x: -5, y: 2, width: 3, height: 3}
+        %RectLayout.Rect{x: 0.0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: -3.5, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: -7.0, y: 2, width: 3, height: 3}
       ]
 
-      iex(4)> spread_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1)], 9, cols: 3)
+      iex> spread_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1)], 9, cols: 3)
       [
-        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
-        %RectLayout.Rect{x: -2.5, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: -2.0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: -5.5, y: 1, width: 2, height: 2},
       ]
 
   """
@@ -1057,8 +1081,8 @@ defmodule RectLayout do
     |> Enum.map_reduce(nil, fn {rect, index}, prev ->
       rect =
         rect
-        |> center_x(opts[:x] - col_width * index + offset)
-        |> threshold_right(if(prev, do: x(prev) - opts[:gap], else: right(rect)))
+        |> center_x(opts[:x] - col_width * index - offset)
+        |> threshold_right(if(prev, do: x(prev) - opts[:gap], else: nil))
 
       {rect, rect}
     end)
@@ -1147,7 +1171,7 @@ defmodule RectLayout do
       rect =
         rect
         |> center_y(opts[:y] + row_height * index + offset)
-        |> threshold_top(if(prev, do: opts[:gap] + bottom(prev), else: y(rect)))
+        |> threshold_top(if(prev, do: opts[:gap] + bottom(prev), else: nil))
 
       {rect, rect}
     end)
@@ -1192,29 +1216,29 @@ defmodule RectLayout do
 
       iex> spread_up([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
       [
-        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
-        %RectLayout.Rect{x: 1, y: -2.5, width: 2, height: 2},
-        %RectLayout.Rect{x: 2, y: -6.0, width: 3, height: 3}
+        %RectLayout.Rect{x: 0, y: -2.0, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: -5.5, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: -9.0, width: 3, height: 3}
       ]
 
       iex> spread_up([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
       [
-        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
-        %RectLayout.Rect{x: 1, y: -4, width: 2, height: 2},
-        %RectLayout.Rect{x: 2, y: -9, width: 3, height: 3}
+        %RectLayout.Rect{x: 0, y: -1.5, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: -5.5, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: -10.5, width: 3, height: 3}
       ]
 
       iex> spread_up([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, y: 2)
       [
-        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
-        %RectLayout.Rect{x: 1, y: -2, width: 2, height: 2},
-        %RectLayout.Rect{x: 2, y: -5, width: 3, height: 3}
+        %RectLayout.Rect{x: 0, y: 0.0, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: -3.5, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: -7.0, width: 3, height: 3}
       ]
 
       iex(4)> spread_up([rect(1, 1, 0, 0), rect(2, 2, 1, 1)], 9, rows: 3)
       [
-        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
-        %RectLayout.Rect{x: 1, y: -2.5, width: 2, height: 2},
+        %RectLayout.Rect{x: 0, y: -2.0, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: -5.5, width: 2, height: 2},
       ]
 
   """
@@ -1232,8 +1256,8 @@ defmodule RectLayout do
     |> Enum.map_reduce(nil, fn {rect, index}, prev ->
       rect =
         rect
-        |> center_y(opts[:y] - row_height * index + offset)
-        |> threshold_bottom(if(prev, do: y(prev) - opts[:gap], else: bottom(rect)))
+        |> center_y(opts[:y] - row_height * index - offset)
+        |> threshold_bottom(if(prev, do: y(prev) - opts[:gap], else: nil))
 
       {rect, rect}
     end)
