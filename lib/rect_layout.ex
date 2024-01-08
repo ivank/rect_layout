@@ -916,7 +916,7 @@ defmodule RectLayout do
   end
 
   @doc """
-  Spread out each item in the list horizontally to cover the assigned `width`
+  Spread out each item in the list horizontally to the right cover the assigned `width`
   Items are spread evenly centered on their vertical axis
   No overlap is allowed and items push each other to the right
 
@@ -940,28 +940,28 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex> spread_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
+      iex> spread_right([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
       [
         %RectLayout.Rect{x: 1.0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 3.5, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 6.0, y: 2, width: 3, height: 3}
       ]
 
-      iex> spread_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
+      iex> spread_right([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
       [
         %RectLayout.Rect{x: 0.5, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 3.5, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 7.5, y: 2, width: 3, height: 3}
       ]
 
-      iex> spread_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, x: 2)
+      iex> spread_right([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, x: 2)
       [
         %RectLayout.Rect{x: 3.0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 5.5, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 8.0, y: 2, width: 3, height: 3}
       ]
 
-      iex(4)> spread_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1)], 9, cols: 3)
+      iex(4)> spread_right([rect(1, 1, 0, 0), rect(2, 2, 1, 1)], 9, cols: 3)
       [
         %RectLayout.Rect{x: 1.0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 3.5, y: 1, width: 2, height: 2},
@@ -969,13 +969,10 @@ defmodule RectLayout do
 
   """
   @doc section: :transform
-  @type spread_horizontal_option :: [{:x, number()} | {:gap, number()} | {:cols, number()}]
-  @spec spread_horizontal(
-          items :: list(Object.t()),
-          width :: number(),
-          opts :: spread_horizontal_option()
-        ) :: list(Object.t())
-  def spread_horizontal(items, width, opts \\ []) when is_list(items) do
+  @type spread_right_option :: [{:x, number()} | {:gap, number()} | {:cols, number()}]
+  @spec spread_right(items :: list(Object.t()), width :: number(), opts :: spread_right_option()) ::
+          list(Object.t())
+  def spread_right(items, width, opts \\ []) when is_list(items) do
     opts = opts |> Keyword.validate!(x: 0, cols: length(items), gap: 0)
     col_width = width / opts[:cols]
     offset = col_width / 2
@@ -994,7 +991,82 @@ defmodule RectLayout do
   end
 
   @doc """
-  Spread out each item in the list vertically to cover the assigned `height`
+  Spread out each item in the list horizontally to the left cover the assigned `width`
+  Items are spread evenly centered on their vertical axis
+  No overlap is allowed and items push each other to the right
+
+  ### Options:
+
+  - `:x` from which x position to start the spread, default `0`
+  - `:gap` the minimum gap between items, default `0`
+  - `:cols` the number of columns to spread items in, you can select a bigger number than the number of items, default `length(items)`
+
+  ## Visual
+
+                           |        |        |
+      *---*-*-*        *---|---* *--|--*   *-|-*
+      |   | | |        |   |   | |  |  |   | | |
+      *---* | |    ->  |   |   | |  |  |   *-|-*
+      *---*-*-*        *---|---* *--|--*     |
+                           |        |        |
+                           |        |        |
+                      <----------width---------->
+
+
+  ## Examples
+
+      iex> spread_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
+      [
+        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: -2.5, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: -6.0, y: 2, width: 3, height: 3}
+      ]
+
+      iex> spread_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
+      [
+        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: -4, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: -9, y: 2, width: 3, height: 3}
+      ]
+
+      iex> spread_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, x: 2)
+      [
+        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: -2, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: -5, y: 2, width: 3, height: 3}
+      ]
+
+      iex(4)> spread_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1)], 9, cols: 3)
+      [
+        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: -2.5, y: 1, width: 2, height: 2},
+      ]
+
+  """
+  @doc section: :transform
+  @type spread_left_option :: [{:x, number()} | {:gap, number()} | {:cols, number()}]
+  @spec spread_left(items :: list(Object.t()), width :: number(), opts :: spread_left_option()) ::
+          list(Object.t())
+  def spread_left(items, width, opts \\ []) when is_list(items) do
+    opts = opts |> Keyword.validate!(x: 0, cols: length(items), gap: 0)
+    col_width = width / opts[:cols]
+    offset = col_width / 2
+
+    items
+    |> Enum.with_index()
+    |> Enum.map_reduce(nil, fn {rect, index}, prev ->
+      rect =
+        rect
+        |> center_x(opts[:x] - col_width * index + offset)
+        |> threshold_right(if(prev, do: x(prev) - opts[:gap], else: right(rect)))
+
+      {rect, rect}
+    end)
+    |> elem(0)
+  end
+
+  @doc """
+  Spread out each item in the list vertically down to cover the assigned `height`
   Items are spread evenly centered on their horizontal axis
   No overlap is allowed and items push each other down
 
@@ -1029,28 +1101,28 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex> spread_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
+      iex> spread_down([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
       [
         %RectLayout.Rect{x: 0, y: 1.0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 3.5, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 6.0, width: 3, height: 3}
       ]
 
-      iex> spread_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
+      iex> spread_down([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
       [
         %RectLayout.Rect{x: 0, y: 0.5, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 3.5, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 7.5, width: 3, height: 3}
       ]
 
-      iex> spread_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, y: 2)
+      iex> spread_down([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, y: 2)
       [
         %RectLayout.Rect{x: 0, y: 3.0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 5.5, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 8.0, width: 3, height: 3}
       ]
 
-      iex(4)> spread_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1)], 9, rows: 3)
+      iex(4)> spread_down([rect(1, 1, 0, 0), rect(2, 2, 1, 1)], 9, rows: 3)
       [
         %RectLayout.Rect{x: 0, y: 1.0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 3.5, width: 2, height: 2},
@@ -1058,13 +1130,13 @@ defmodule RectLayout do
 
   """
   @doc section: :transform
-  @type spread_vertical_option :: [{:x, number()} | {:gap, number()} | {:cols, number()}]
-  @spec spread_vertical(
+  @type spread_down_option :: [{:x, number()} | {:gap, number()} | {:cols, number()}]
+  @spec spread_down(
           items :: list(Object.t()),
           height :: number(),
-          opts :: spread_vertical_option()
+          opts :: spread_down_option()
         ) :: list(Object.t())
-  def spread_vertical(items, height, opts \\ []) when is_list(items) do
+  def spread_down(items, height, opts \\ []) when is_list(items) do
     opts = opts |> Keyword.validate!(y: 0, rows: length(items), gap: 0)
     row_height = height / opts[:rows]
     offset = row_height / 2
@@ -1083,36 +1155,183 @@ defmodule RectLayout do
   end
 
   @doc """
-  Distribute each item in the list horizontally to cover the assigned `width` with a consistent gap between items
+  Spread out each item in the list vertically up to cover the assigned `height`
+  Items are spread evenly centered on their horizontal axis
+  No overlap is allowed and items push each other down
+
+  ### Options:
+
+  - `:y` from which y position to start the spread, default `0`
+  - `:gap` the minimum gap between items, default `0`
+  - `:rows` the number of rows to spread items in, you can select a bigger number than the number of items, default `length(items)`
+
+  ## Visual
+
+                              *-------*      ▲
+                              |       |      |
+                              |       |      |
+                          ----|       |--    |
+                              |       |      |
+                              |       |      |
+      *---*-*-*               *-------*      |
+      |   | | |               *-----*        |
+      *---* | |    ->         |     |        |
+      |     | |           ----|     |----  height
+      *-----* |               |     |        |
+      |       |               *-----*        |
+      *-------*                              |
+                                             |
+                              *---*          |
+                          ----|   |------    |
+                              *---*          |
+                                             |
+                                             ▼
+
+
+  ## Examples
+
+      iex> spread_up([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9)
+      [
+        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: -2.5, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: -6.0, width: 3, height: 3}
+      ]
+
+      iex> spread_up([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 6, gap: 2)
+      [
+        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: -4, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: -9, width: 3, height: 3}
+      ]
+
+      iex> spread_up([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 9, y: 2)
+      [
+        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: -2, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: -5, width: 3, height: 3}
+      ]
+
+      iex(4)> spread_up([rect(1, 1, 0, 0), rect(2, 2, 1, 1)], 9, rows: 3)
+      [
+        %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: -2.5, width: 2, height: 2},
+      ]
+
+  """
+  @doc section: :transform
+  @type spread_up_option :: [{:x, number()} | {:gap, number()} | {:cols, number()}]
+  @spec spread_up(items :: list(Object.t()), height :: number(), opts :: spread_up_option()) ::
+          list(Object.t())
+  def spread_up(items, height, opts \\ []) when is_list(items) do
+    opts = opts |> Keyword.validate!(y: 0, rows: length(items), gap: 0)
+    row_height = height / opts[:rows]
+    offset = row_height / 2
+
+    items
+    |> Enum.with_index()
+    |> Enum.map_reduce(nil, fn {rect, index}, prev ->
+      rect =
+        rect
+        |> center_y(opts[:y] - row_height * index + offset)
+        |> threshold_bottom(if(prev, do: y(prev) - opts[:gap], else: bottom(rect)))
+
+      {rect, rect}
+    end)
+    |> elem(0)
+  end
+
+  defp distribute_horizontal_gap(items, width) do
+    (width - (items |> Enum.map(&width(&1)) |> Enum.sum())) / (length(items) - 1)
+  end
+
+  @doc """
+  Distribute each item in the list horizontally to the right to cover the assigned `width` with a consistent gap between items
 
   ## Visual
 
       *---*-*-*         *---*  *-----*  *-------*
       |   | | |         |   |  |     |  |       |
       *---* | |    ->   *---*  |     |  |       |
-      *---*-*-*                *---*-*  *---*---*
+      *---*-*-*                *-----*  *-------*
                         <--------width---------->
 
 
   ## Examples
 
-      iex> distribute_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12)
+      iex> distribute_right([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12)
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 4.0, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 9.0, y: 2, width: 3, height: 3}
       ]
 
+      iex> distribute_right([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12, x: 10)
+      [
+        %RectLayout.Rect{x: 10, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: 14.0, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: 19.0, y: 2, width: 3, height: 3}
+      ]
+
   """
   @doc section: :transform
-  @spec distribute_horizontal(items :: list(Object.t()), width :: number()) :: list(Object.t())
-  def distribute_horizontal(items, width) when is_list(items) do
-    gap = (width - (items |> Enum.map(&width(&1)) |> Enum.sum())) / (length(items) - 1)
-    items |> Enum.map_reduce(0, &{x(&1, &2), &2 + width(&1) + gap}) |> elem(0)
+  @type distribute_right_option :: [{:x, number()}]
+  @spec distribute_right(
+          items :: list(Object.t()),
+          width :: number(),
+          options :: distribute_right_option()
+        ) :: list(Object.t())
+  def distribute_right(items, width, opts \\ []) when is_list(items) do
+    opts = opts |> Keyword.validate!(x: 0)
+    flow_right(items, x: opts[:x], gap: distribute_horizontal_gap(items, width))
   end
 
   @doc """
-  Distribute each item in the list vertically to cover the assigned `height` with a consistent gap between items
+  Distribute each item in the list horizontally to the left to cover the assigned `width` with a consistent gap between items
+
+  ## Visual
+
+      *---*-*-*         *-------*  *-----*  *---*
+      |   | | |         |       |  |     |  |   |
+      *---* | |    ->   |       |  |     |  *---*
+      *---*-*-*         *-------*  *-----*
+                        <--------width---------->
+
+
+  ## Examples
+
+      iex> distribute_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12)
+      [
+        %RectLayout.Rect{x: -1, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: -6.0, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: -12.0, y: 2, width: 3, height: 3}
+      ]
+
+      iex> distribute_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12, x: 12)
+      [
+        %RectLayout.Rect{x: 11, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: 6.0, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: 0.0, y: 2, width: 3, height: 3}
+      ]
+
+  """
+  @doc section: :transform
+  @type distribute_left_option :: [{:x, number()}]
+  @spec distribute_left(
+          items :: list(Object.t()),
+          width :: number(),
+          options :: distribute_left_option()
+        ) :: list(Object.t())
+  def distribute_left(items, width, opts \\ []) when is_list(items) do
+    opts = opts |> Keyword.validate!(x: 0)
+    flow_left(items, x: opts[:x], gap: distribute_horizontal_gap(items, width))
+  end
+
+  defp distribute_vertical_gap(items, height) do
+    (height - (items |> Enum.map(&height(&1)) |> Enum.sum())) / (length(items) - 1)
+  end
+
+  @doc """
+  Distribute each item in the list vertically down to cover the assigned `height` with a consistent gap between items
 
   ## Visual
 
@@ -1136,23 +1355,87 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex> distribute_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12)
+      iex> distribute_bottom([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12)
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 4.0, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 9.0, width: 3, height: 3}
       ]
 
+      iex> distribute_bottom([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12, y: 10)
+      [
+        %RectLayout.Rect{x: 0, y: 10, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: 14.0, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: 19.0, width: 3, height: 3}
+      ]
+
   """
   @doc section: :transform
-  @spec distribute_vertical(items :: list(Object.t()), height :: number()) :: list(Object.t())
-  def distribute_vertical(items, height) when is_list(items) do
-    gap = (height - (items |> Enum.map(&height(&1)) |> Enum.sum())) / (length(items) - 1)
-    items |> Enum.map_reduce(0, &{y(&1, &2), &2 + height(&1) + gap}) |> elem(0)
+  @type distribute_bottom_option :: [{:y, number()}]
+  @spec distribute_bottom(
+          items :: list(Object.t()),
+          height :: number(),
+          options :: distribute_bottom_option()
+        ) :: list(Object.t())
+  def distribute_bottom(items, height, opts \\ []) when is_list(items) do
+    opts = opts |> Keyword.validate!(y: 0)
+    flow_bottom(items, y: opts[:y], gap: distribute_vertical_gap(items, height))
   end
 
   @doc """
-  Distribute each item in the list horizontally with a set gap
+  Distribute each item in the list vertically up to cover the assigned `height` with a consistent gap between items
+
+  ## Visual
+
+                         *-------*  ▲
+                         |       |  |
+                         |       |  |
+                         |       |  |
+      *---*-*-*          |       |  |
+      |   | | |          |       |  |
+      *---* | |    ->    *-------*  |
+      |     | |                     |
+      *-----* |          *-----*    |
+      |       |          |     |  height
+      *-------*          |     |    |
+                         |     |    |
+                         *-----*    |
+                                    |
+                         *---*      |
+                         |   |      |
+                         *---*      ▼
+
+  ## Examples
+
+      iex> distribute_top([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12)
+      [
+        %RectLayout.Rect{x: 0, y: -1, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: -6.0, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: -12.0, width: 3, height: 3}
+      ]
+
+      iex> distribute_top([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], 12, y: 12)
+      [
+        %RectLayout.Rect{x: 0, y: 11, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: 6.0, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: 0.0, width: 3, height: 3}
+      ]
+
+  """
+  @doc section: :transform
+  @type distribute_top_option :: [{:y, number()}]
+  @spec distribute_top(
+          items :: list(Object.t()),
+          height :: number(),
+          options :: distribute_top_option()
+        ) :: list(Object.t())
+  def distribute_top(items, height, opts \\ []) when is_list(items) do
+    opts = opts |> Keyword.validate!(y: 0)
+    flow_top(items, y: opts[:y], gap: distribute_vertical_gap(items, height))
+  end
+
+  @doc """
+  Distribute each item in the list horizontally to the right with a set gap
 
   ### Options
 
@@ -1170,21 +1453,21 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex> flow_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)])
+      iex> flow_right([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)])
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 3, y: 2, width: 3, height: 3}
       ]
 
-      iex> flow_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2)
+      iex> flow_right([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2)
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 3, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 7, y: 2, width: 3, height: 3}
       ]
 
-      iex> flow_horizontal([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, x: 2)
+      iex> flow_right([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, x: 2)
       [
         %RectLayout.Rect{x: 2, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 5, y: 1, width: 2, height: 2},
@@ -1193,16 +1476,64 @@ defmodule RectLayout do
 
   """
   @doc section: :transform
-  @type flow_horizontal_option :: [{:x, number()} | {:gap, number()}]
-  @spec flow_horizontal(items :: list(Object.t()), opts :: flow_horizontal_option()) ::
-          list(Object.t())
-  def flow_horizontal(items, opts \\ []) when is_list(items) do
+  @type flow_right_option :: [{:x, number()} | {:gap, number()}]
+  @spec flow_right(items :: list(Object.t()), opts :: flow_right_option()) :: list(Object.t())
+  def flow_right(items, opts \\ []) when is_list(items) do
     opts = opts |> Keyword.validate!(x: 0, gap: 0)
     items |> Enum.map_reduce(opts[:x], &{x(&1, &2), &2 + width(&1) + opts[:gap]}) |> elem(0)
   end
 
   @doc """
-  Distribute each item in the list vertically with a set gap
+  Distribute each item in the list horizontally to the left with a set gap
+
+  ### Options
+
+  - `:x` where to start the flow from, default `0`
+  - `:gap` the gap between items, default `0`
+
+  ## Visual
+
+      *---*-*-*         *-------**-----**---*
+      |   | | |         |       ||     ||   |
+      *---* | |    ->   |       ||     |*---*
+      *---*-*-*         *-------**-----*
+                        <-------width------->
+
+
+  ## Examples
+
+      iex> flow_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)])
+      [
+        %RectLayout.Rect{x: -1, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: -3, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: -6, y: 2, width: 3, height: 3}
+      ]
+
+      iex> flow_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2)
+      [
+        %RectLayout.Rect{x: -1, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: -5, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: -10, y: 2, width: 3, height: 3}
+      ]
+
+      iex> flow_left([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, x: 10)
+      [
+        %RectLayout.Rect{x: 9, y: 0, width: 1, height: 1},
+        %RectLayout.Rect{x: 5, y: 1, width: 2, height: 2},
+        %RectLayout.Rect{x: 0, y: 2, width: 3, height: 3}
+      ]
+
+  """
+  @doc section: :transform
+  @type flow_left_option :: [{:x, number()} | {:gap, number()}]
+  @spec flow_left(items :: list(Object.t()), opts :: flow_left_option()) :: list(Object.t())
+  def flow_left(items, opts \\ []) when is_list(items) do
+    opts = opts |> Keyword.validate!(x: 0, gap: 0)
+    items |> Enum.map_reduce(opts[:x], &{right(&1, &2), &2 - width(&1) - opts[:gap]}) |> elem(0)
+  end
+
+  @doc """
+  Distribute each item in the list vertically down with a set gap
 
   ### Options
 
@@ -1229,21 +1560,21 @@ defmodule RectLayout do
 
   ## Examples
 
-      iex> flow_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)])
+      iex> flow_bottom([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)])
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 1, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 3, width: 3, height: 3}
       ]
 
-      iex> flow_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2)
+      iex> flow_bottom([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2)
       [
         %RectLayout.Rect{x: 0, y: 0, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 3, width: 2, height: 2},
         %RectLayout.Rect{x: 2, y: 7, width: 3, height: 3}
       ]
 
-      iex> flow_vertical([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, y: 2)
+      iex> flow_bottom([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, y: 2)
       [
         %RectLayout.Rect{x: 0, y: 2, width: 1, height: 1},
         %RectLayout.Rect{x: 1, y: 5, width: 2, height: 2},
@@ -1252,11 +1583,80 @@ defmodule RectLayout do
 
   """
   @doc section: :transform
-  @type flow_vertical_option :: [{:y, number()} | {:gap, number()}]
-  @spec flow_vertical(items :: list(Object.t()), opts :: flow_vertical_option()) ::
+  @type flow_bottom_option :: [{:y, number()} | {:gap, number()}]
+  @spec flow_bottom(items :: list(Object.t()), opts :: flow_bottom_option()) ::
           list(Object.t())
-  def flow_vertical(items, opts \\ []) when is_list(items) do
+  def flow_bottom(items, opts \\ []) when is_list(items) do
     opts = opts |> Keyword.validate!(y: 0, gap: 0)
     items |> Enum.map_reduce(opts[:y], &{y(&1, &2), &2 + height(&1) + opts[:gap]}) |> elem(0)
+  end
+
+  @doc """
+  Distribute each item in the list vertically up with a set gap
+
+  ### Options
+
+  - `:y` where to start the flow from, default `0`
+  - `:gap` the gap between items, default `0`
+
+  ## Visual
+
+                         *-------*  ▲
+                         |       |  |
+                         |       |  |
+      *---*-*-*          |       |  |
+      |   | | |          |       |  |
+      *---* | |    ->    |       |  |
+      |     | |          *-------*  |
+      *-----* |          *-----*    |
+      |       |          |     |  height
+      *-------*          |     |    |
+                         |     |    |
+                         *-----*    |
+                         *---*      |
+                         |   |      |
+                         *---*      ▼
+
+
+
+
+
+
+
+
+
+
+
+  ## Examples
+
+      iex> flow_top([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)])
+      [
+        %RectLayout.Rect{x: 0, y: -1, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: -3, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: -6, width: 3, height: 3}
+      ]
+
+      iex> flow_top([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2)
+      [
+        %RectLayout.Rect{x: 0, y: -1, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: -5, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: -10, width: 3, height: 3}
+      ]
+
+      iex> flow_top([rect(1, 1, 0, 0), rect(2, 2, 1, 1), rect(3, 3, 2, 2)], gap: 2, y: 10)
+      [
+        %RectLayout.Rect{x: 0, y: 9, width: 1, height: 1},
+        %RectLayout.Rect{x: 1, y: 5, width: 2, height: 2},
+        %RectLayout.Rect{x: 2, y: 0, width: 3, height: 3}
+      ]
+
+  """
+  @doc section: :transform
+  @type flow_top_option :: [{:y, number()} | {:gap, number()}]
+  @spec flow_top(items :: list(Object.t()), opts :: flow_top_option()) ::
+          list(Object.t())
+  def flow_top(items, opts \\ []) when is_list(items) do
+    opts = opts |> Keyword.validate!(y: 0, gap: 0)
+    items |> Enum.map_reduce(opts[:y], &{bottom(&1, &2), &2 - height(&1) - opts[:gap]}) |> elem(0)
   end
 end

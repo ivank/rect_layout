@@ -26,9 +26,9 @@ iex> rows = images
 ...>  |> Enum.map(&sprite(rect(&1.width, &1.height), &1))
 ...>  |> Enum.chunk_every(3)
 ...>  |> Enum.map(fn chunk ->
-...>    group(chunk |> constrain_width(100) |> spread_horizontal(500, gap: 2) |> align_bottom(100))
+...>    group(chunk |> constrain_width(100) |> spread_right(500, gap: 2) |> align_bottom(100))
 ...>  end)
-...>  |> flow_vertical(gap: 10)
+...>  |> flow_bottom(gap: 10)
 iex> for row <- rows do
 ...>   for s <- group_children(row) do
 ...>     "<image x='#{x(s)}' y='#{y(s)}' width='#{width(s)}' height='#{height(s)}' xlink:href='#{sprite_content(s).src}' />"

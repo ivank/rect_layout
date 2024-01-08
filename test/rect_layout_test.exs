@@ -50,7 +50,7 @@ defmodule RectLayoutTest do
         rect(1000, 72, 0, 3928.0)
       ]
 
-      assert distribute_vertical(rects, 4000) == expects
+      assert distribute_bottom(rects, 4000) == expects
     end
 
     test "layout" do
@@ -75,7 +75,7 @@ defmodule RectLayoutTest do
           group(
             items
             |> Enum.map(&constrain_height(&1, sprite_content(&1).height * row_height_zoom))
-            |> spread_horizontal(width, x: padding, cols: cols, gap: gap)
+            |> spread_right(width, x: padding, cols: cols, gap: gap)
             |> align_bottom()
             |> Enum.map(fn image ->
               flag =
@@ -96,7 +96,7 @@ defmodule RectLayoutTest do
             end)
           )
         end)
-        |> flow_vertical(gap: gap, y: padding)
+        |> flow_bottom(gap: gap, y: padding)
 
       expected = [
         group([
